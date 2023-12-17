@@ -31,11 +31,15 @@ const Landing = () => {
                 <span className="border-b border-gray-400 w-1/5"></span>
             </h1>
         </div>
+        <Link to="/signup">
         <button className="flex items-center justify-center px-7 py-1 rounded-3xl bg-[#1d9bf0] text-white">Sign up with phone or email</button>
+        </Link>
       </div>
       <div className="mt-5">
         <h1 className="text-lg text-center">Already have an account?</h1>
+        <Link to="/login">
         <button className="px-24 mt-2 py-1 border border-[#1d9bf0] rounded-3xl">Sign in</button>
+        </Link>
       </div>
     </div>
   );

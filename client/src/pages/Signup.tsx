@@ -3,9 +3,9 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { MdDriveFolderUpload } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { auth } from "../config/firebase-config";
+import { auth, db } from "../config/firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 const Signup = () => {
   const [imagePreview, setImagePreview] = useState(
     "https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-0.png"
@@ -37,22 +37,28 @@ const Signup = () => {
       );
     }
   };
-  const handleSignup = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        nextStep();
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
+  const handleSignup = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      await await setDoc(doc(db, "user", email), {
+        email,
+        username,
+        password,
+        profilePic:
+          "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg",
+        posts: [],
+        following: 0,
+        followers: 0,
+        followingList: [],
+        followersList: [],
+        dateOfBirth: dob,
+        name,
       });
-  }
+      nextStep();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       <div className="flex flex-col items-center  justify-center h-screen opacity-40 relative bg-[#242d34] pointer-events-none">
@@ -121,12 +127,16 @@ const Signup = () => {
                 onChange={(e) => setDob(e.target.value)}
               />
             </div>
+            <div>
+              <button></button>
             <button
               className="px-24 mt-2 py-1 border bg-white text-black rounded-3xl"
               onClick={nextStep}
             >
               Proceed
             </button>
+            </div>
+           
           </div>
         </div>
 
@@ -169,7 +179,6 @@ const Signup = () => {
             <button
               className="px-24 mt-2 py-1 border bg-white text-black rounded-3xl"
               onClick={handleSignup}
-              
             >
               Proceed
             </button>
