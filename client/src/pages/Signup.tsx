@@ -5,7 +5,7 @@ import { MdDriveFolderUpload } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { auth, db } from "../config/firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 const Signup = () => {
   const [imagePreview, setImagePreview] = useState(
     "https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-0.png"
@@ -40,7 +40,7 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      await await setDoc(doc(db, "user", email), {
+      await setDoc(doc(db, "user", email), {
         email,
         username,
         password,

@@ -1,9 +1,40 @@
-import React from "react";
+import React,{useState} from "react";
 import { FaXTwitter } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { MdDriveFolderUpload } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
+import { auth,provider } from "../config/firebase-config";
+import { signInWithEmailAndPassword,signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../Store/Slices/DataSlice";
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      dispatch(login({ email }));
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleGoogleLogin = async () => {
+    try {
+    const result=  await signInWithPopup(auth, provider);
+    const user=result.user;
+    const userEmail=user.email;
+    
+
+    dispatch(login({ email: userEmail }));
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       <div className="flex flex-col items-center  justify-center h-screen opacity-40 relative bg-[#242d34] pointer-events-none">
@@ -49,9 +80,9 @@ const Login = () => {
         </div>
         <div className="px-10 flex items-center justify-center flex-col">
             <h1 className="text-2xl mb-5">Login in your account</h1>
-            <button className="flex items-center justify-center px-10 py-1 rounded-3xl bg-white text-black">
+            <button className="flex items-center justify-center px-10 py-1 rounded-3xl bg-white text-black" onClick={handleGoogleLogin}>
               <FcGoogle className="mr-3" />
-              Sign up with Google
+              Sign in with Google
             </button>
            </div>
            <div>
@@ -66,13 +97,15 @@ const Login = () => {
                 type="text"
                 className="w-full h-10 border rounded-md mb-5 border-[#242d34] bg-transparent outline-none placeholder:pl-2 pl-2 text-sm "
                 placeholder="Enter email"
+                onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 type="password"
                 className="w-full h-10 border rounded-md mb-5 border-[#242d34] bg-transparent outline-none placeholder:pl-2 pl-2 text-sm "
                 placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
               />
-              <button className="flex items-center justify-center px-7 py-1 rounded-3xl bg-[#1d9bf0] text-white">
+              <button className="flex items-center justify-center px-7 py-1 rounded-3xl bg-[#1d9bf0] text-white" onClick={handleLogin}>
                 Login
               </button>
               </div>

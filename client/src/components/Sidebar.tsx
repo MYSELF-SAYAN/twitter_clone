@@ -8,7 +8,13 @@ import { CiViewList } from "react-icons/ci";
 import { MdPeopleOutline } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { CiCircleMore } from "react-icons/ci";
+import { isOpen,isClose } from "../Store/Slices/PostSlice";
+import { useDispatch,useSelector } from "react-redux";
+
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const data = useSelector((state: any) => state.post);
+  
   return (
     <div className="sticky top-0 h-screen w-1/5 border-r border-gray-600  overflow-y-auto">
       <h1 className="py-5 text-2xl">
@@ -64,8 +70,10 @@ const Sidebar = () => {
           <p className="ml-3">More</p>
         </li>
       </ul>
-      <button className="bg-[#1DA1F2] text-white rounded-full px-5 py-2 mt-2 w-11/12 font-semibold hover:bg-[#125d8d]">
-        Tweet
+      <button className="bg-[#1DA1F2] text-white rounded-full px-5 py-2 mt-2 w-11/12 font-semibold hover:bg-[#125d8d]" onClick={()=>{
+        data.open ? dispatch(isClose()) : dispatch(isOpen())
+      }}>
+        Post
       </button>
     </div>
   );
